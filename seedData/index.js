@@ -6,6 +6,8 @@ import movieModel from '../api/movies/movieModel';
 import movies from './movies.js';
 import peopleModel from '../api/people/peopleModel';
 import peoples from './people.js';
+import tvModel from '../api/tv/tvModel';
+import tvs from './tv.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -57,9 +59,22 @@ export async function loadPeople() {
   }
 }
 
+export async function loadTv() {
+  console.log('load tv data');
+  console.log(tvs.length);
+  try {
+    await tvModel.deleteMany();
+    await tvModel.collection.insertMany(tvs);
+    console.info(`${tvs.length} tvs were successfully stored.`);
+  } catch (err) {
+    console.error(`failed to Load tv Data: ${err}`);
+  }
+}
+
 if (process.env.SEED_DB == 'true') {
   loadUsers();
   loadGenres();//you may not need this line if you skipped the exercises
   loadMovies();//ADD THIS LINE
   loadPeople();
+  loadTv();
 }

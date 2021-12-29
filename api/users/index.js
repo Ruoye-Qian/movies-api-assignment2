@@ -109,17 +109,4 @@ router.post('/:userName/likes', asyncHandler(async (req, res) => {
 }));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 export default router;

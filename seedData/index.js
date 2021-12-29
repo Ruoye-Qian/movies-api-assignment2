@@ -4,6 +4,8 @@ import genresModel from '../api/genres/genresModel';
 import genres from './genres';
 import movieModel from '../api/movies/movieModel';
 import movies from './movies.js';
+import peopleModel from '../api/people/peopleModel';
+import peoples from './people.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -42,11 +44,22 @@ async function loadGenres() {
     console.error(`failed to Load genres Data: ${err}`);
   }
 }
-// if (process.env.SEED_DB) {
-//   loadGenres();
-// }
+
+export async function loadPeople() {
+  console.log('load actor data');
+  console.log(peoples.length);
+  try {
+    await peopleModel.deleteMany();
+    await peopleModel.collection.insertMany(peoples);
+    console.info(`${peoples.length} people were successfully stored.`);
+  } catch (err) {
+    console.error(`failed to Load people Data: ${err}`);
+  }
+}
+
 if (process.env.SEED_DB == 'true') {
   loadUsers();
   loadGenres();//you may not need this line if you skipped the exercises
   loadMovies();//ADD THIS LINE
+  loadPeople();
 }

@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
 import movieModel from '../movies/movieModel';
 import actorModel from '../people/peopleModel';
+import tvModel from '../tv/tvModel';
 
 const router = express.Router(); // eslint-disable-line
 
@@ -107,6 +108,38 @@ router.post('/:userName/likes', asyncHandler(async (req, res) => {
     res.status(404).json({ code: 404, msg: 'cannot add duplicates' });
   }
 }));
+
+//get tv playlist
+router.get('/:userName/tvPlaylist', asyncHandler( async (req, res) => {
+  const userName = req.params.userName;
+  const user = await User.findByUserName(userName).populate('tvPlaylist');
+  res.status(200).json(user.tvPlaylist);
+}));
+
+//add tv to playlist
+router.post('/:userName/tvPlaylist', asyncHandler(async (req, res) => {
+  const newPlaylist = req.body.id;
+  const userName = req.params.userName;
+  const tv = await tvModel.findByTvDBId(newPlaylist);
+  //if data don't have the tv,we cannot add it.
+  if(tv == null ){
+    res.status(401).json({ code: 401, msg: 'unable to add tvs' });
+  }
+  const user = await User.findByUserName(userName);
+  if(user.tvPlaylist.indexOf(tv._id)==-1){
+  await user.tvPlaylist.push(tv._id);
+  await user.save(); 
+  res.status(201).json(user); 
+  }else {
+    res.status(404).json({ code: 404, msg: 'cannot add duplicates' });
+  }
+}));
+
+
+
+
+
+
 
 
 export default router;

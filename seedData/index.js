@@ -10,7 +10,7 @@ import tvModel from '../api/tv/tvModel';
 import tvs from './tv.js';
 import dotenv from 'dotenv';
 
-const {getMovies} = require('../api/tmdb-api')
+const {getMovies, getGenres} = require('../api/tmdb-api')
 
 
 dotenv.config();
@@ -44,6 +44,7 @@ async function loadGenres() {
   console.log('load genres Data');
   try {
     await genresModel.deleteMany();
+    const genres = await getGenres();
     await genresModel.collection.insertMany(genres);
     console.info(`${genres.length} genres were successfully stored.`);
   } catch (err) {

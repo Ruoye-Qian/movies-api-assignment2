@@ -1,16 +1,16 @@
 import userModel from '../api/users/userModel';
 import users from './users';
 import genresModel from '../api/genres/genresModel';
-import genres from './genres';
+//import genres from './genres';
 import movieModel from '../api/movies/movieModel';
 //import movies from './movies.js';
 import peopleModel from '../api/people/peopleModel';
-import peoples from './people.js';
+//import peoples from './people.js';
 import tvModel from '../api/tv/tvModel';
 import tvs from './tv.js';
 import dotenv from 'dotenv';
 
-const {getMovies, getGenres} = require('../api/tmdb-api')
+const {getMovies, getGenres, getPeoples} = require('../api/tmdb-api')
 
 
 dotenv.config();
@@ -54,9 +54,10 @@ async function loadGenres() {
 
 export async function loadPeople() {
   console.log('load actor data');
-  console.log(peoples.length);
+  //console.log(peoples.length);
   try {
     await peopleModel.deleteMany();
+    const peoples = await getPeoples();
     await peopleModel.collection.insertMany(peoples);
     console.info(`${peoples.length} people were successfully stored.`);
   } catch (err) {

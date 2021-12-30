@@ -44,3 +44,11 @@ export const getGenres = () => {
       .then(json => json.genres);
 };
 
+export const getPeoples = () => {
+    return fetch(
+      `https://api.themoviedb.org/3/person/popular?api_key=${process.env.TMDB_KEY}&language=en-US`
+    )
+      .then(res => res.json())
+      .then(json => json.results);
+};
+

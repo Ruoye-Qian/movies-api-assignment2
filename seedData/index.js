@@ -3,20 +3,24 @@ import users from './users';
 import genresModel from '../api/genres/genresModel';
 import genres from './genres';
 import movieModel from '../api/movies/movieModel';
-import movies from './movies.js';
+//import movies from './movies.js';
 import peopleModel from '../api/people/peopleModel';
 import peoples from './people.js';
 import tvModel from '../api/tv/tvModel';
 import tvs from './tv.js';
 import dotenv from 'dotenv';
 
+const {getMovies} = require('../api/tmdb-api')
+
+
 dotenv.config();
 // deletes all movies documents in collection and inserts test data
 export async function loadMovies() {
   console.log('load seed data');
-  console.log(movies.length);
+  //console.log(movies.length);
   try {
     await movieModel.deleteMany();
+    const movies = await getMovies();
     await movieModel.collection.insertMany(movies);
     console.info(`${movies.length} Movies were successfully stored.`);
   } catch (err) {

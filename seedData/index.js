@@ -7,10 +7,10 @@ import movieModel from '../api/movies/movieModel';
 import peopleModel from '../api/people/peopleModel';
 //import peoples from './people.js';
 import tvModel from '../api/tv/tvModel';
-import tvs from './tv.js';
+//import tvs from './tv.js';
 import dotenv from 'dotenv';
 
-const {getMovies, getGenres, getPeoples} = require('../api/tmdb-api')
+const {getMovies, getGenres, getPeoples, getTvs} = require('../api/tmdb-api')
 
 
 dotenv.config();
@@ -67,9 +67,10 @@ export async function loadPeople() {
 
 export async function loadTv() {
   console.log('load tv data');
-  console.log(tvs.length);
+  //console.log(tvs.length);
   try {
     await tvModel.deleteMany();
+    const tvs = await getTvs();
     await tvModel.collection.insertMany(tvs);
     console.info(`${tvs.length} tvs were successfully stored.`);
   } catch (err) {

@@ -1,11 +1,12 @@
 import express from 'express';
 import { movies, movieReviews, movieDetails } from './moviesData';
 import uniqid from 'uniqid'
+import reviewsModel from '../reviews/reviewsModel';
 import movieModel from './movieModel';
 import asyncHandler from 'express-async-handler';
 import { getUpcomingMovies } from '../tmdb-api';
 import { getNowplayingMovies } from '../tmdb-api';
-
+import { getMovieReviews } from '../tmdb-api';
 
 const router = express.Router(); 
 router.get('/', asyncHandler(async (req, res) => {
@@ -34,35 +35,106 @@ router.get('/:id', asyncHandler(async (req, res) => {
     }
 }));
 // Get movie reviews
-router.get('/:id/reviews', (req, res) => {
+// router.get('/:id/reviews', (req, res) => {
+//     const id = parseInt(req.params.id);
+//     // find reviews in list
+//     if (movieReviews.id == id) {
+//         res.status(200).json(movieReviews);
+//     } else {
+//         res.status(404).json({
+//             message: 'The resource you requested could not be found.',
+//             status_code: 404
+//         });
+//     }
+// });
+
+//get movie reviews
+router.get('/:id/reviews', async (req, res, next) => {
     const id = parseInt(req.params.id);
-    // find reviews in list
-    if (movieReviews.id == id) {
-        res.status(200).json(movieReviews);
-    } else {
+    const movie = await movieModel.findByMovieDBId(id)
+    if (movie) {
+        const reviews = movie.reviews
+        if (reviews.length) {
+            console.log('load from the database');
+            movieModel.findByMovieDBId(id).populate('reviews')
+                .exec((err, foundObject) => {
+                    if (err) {
+                        next(err)
+                    }
+                    res.status(200).send(foundObject.reviews)
+                })
+        }
+        else {
+            console.log('load from TMDB and store');
+            const reviews = await getMovieReviews(id);
+            await reviewsModel.deleteMany();
+            await reviewsModel.collection.insertMany(reviews);
+            const review_ids = await reviewsModel.find({}, { _id: 1 })
+            review_ids.forEach(async review_id => {
+                await movie.reviews.push(review_id)
+            })
+            await movie.save()
+            res.status(200).json(reviews);
+        }
+    }
+    else {
         res.status(404).json({
             message: 'The resource you requested could not be found.',
             status_code: 404
         });
     }
 });
-//Post a movie review
-router.post('/:id/reviews', (req, res) => {
-    const id = parseInt(req.params.id);
 
-    if (movieReviews.id == id) {
+// //Post a movie review
+// router.post('/:id/reviews', (req, res) => {
+//     const id = parseInt(req.params.id);
+
+//     if (movieReviews.id == id) {
+//         req.body.created_at = new Date();
+//         req.body.updated_at = new Date();
+//         req.body.id = uniqid();
+//         movieReviews.results.push(req.body); //push the new review onto the list
+//         res.status(201).json(req.body);
+//     } else {
+//         res.status(404).json({
+//             message: 'The resource you requested could not be found.',
+//             status_code: 404
+//         });
+//     }
+// });
+
+//Post a movie review
+router.post('/:id/reviews', asyncHandler(async (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const movie = await movieModel.findByMovieDBId(id);
+
+    if (movie) {
         req.body.created_at = new Date();
         req.body.updated_at = new Date();
         req.body.id = uniqid();
-        movieReviews.results.push(req.body); //push the new review onto the list
-        res.status(201).json(req.body);
+
+        if (!req.body.author || !req.body.content) {
+            res.status(401).json({ success: false, msg: 'Please pass author and content.' });
+            return next();
+        } else {
+            var reg = /^(a-z|A-Z|0-9)*[^$%^&*;:,<>?()\""\']{10,}$/;
+            if (reg.test(req.body.content)) {
+                await reviewsModel.collection.insertOne(req.body);
+                await movie.reviews.push(req.body)
+                await movie.save();
+                res.status(201).json({ code: 201, msg: 'Successful created new review.' });
+            } else {
+                res.status(401).json({ success: false, msg: 'This is not a good review format.' });
+            }
+        }
     } else {
         res.status(404).json({
             message: 'The resource you requested could not be found.',
             status_code: 404
         });
     }
-});
+}));
+
 
 router.get('/tmdb/upcoming', asyncHandler( async(req, res) => {
     const upcomingMovies = await getUpcomingMovies();

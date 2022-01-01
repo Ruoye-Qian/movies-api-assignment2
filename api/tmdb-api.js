@@ -59,3 +59,11 @@ export const getTvs = () => {
       .then(res => res.json())
       .then(json => json.results);
 };
+
+export const getMovieReviews = (id) => {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.TMDB_KEY}&language=en-US`
+  )
+    .then(res => res.json())
+    .then(json => json.results);
+};

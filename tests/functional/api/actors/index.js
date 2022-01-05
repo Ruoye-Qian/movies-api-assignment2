@@ -41,16 +41,17 @@ describe("Actors endpoint", () => {
     api.close(); // To Release PORT 8080
   });
   describe("GET /api/actors ", () => {
-    it("should return 20 actors and a status 200", () => {
+    it("should return 20 actors and a status 200", (done) => {
       request(api)
         .get("/api/actors")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .end((err, res) => {
           expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(20);
+          expect(res.body.results.length).to.equal(10);
+          done();
         });
     });
   });
@@ -58,7 +59,7 @@ describe("Actors endpoint", () => {
   describe("GET /api/actors/:id", () => {
     describe("when the id is valid", () => {
       it("should return the matching actor", () => {
-        request(api)
+        return request(api)
           .get(`/api/actors/${actors[0].id}`)
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
@@ -71,7 +72,7 @@ describe("Actors endpoint", () => {
     });
     describe("when the id is invalid", () => {
       it("should return the NOT found message", () => {
-        request(api)
+        return request(api)
           .get("/api/actors/9999")
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")

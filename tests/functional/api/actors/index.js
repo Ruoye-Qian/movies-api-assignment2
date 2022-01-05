@@ -30,8 +30,8 @@ describe("Actors endpoint", () => {
   beforeEach(async () => {
     try {
       actors= await getPeoples();
-      // await People.deleteMany();
-      // await People.collection.insertMany(actors);
+      await People.deleteMany();
+      await People.collection.insertMany(actors);
       
     } catch (err) {
       console.error(`failed to Load actor Data: ${err}`);
@@ -41,17 +41,16 @@ describe("Actors endpoint", () => {
     api.close(); // To Release PORT 8080
   });
   describe("GET /api/actors ", () => {
-    it("should return 20 actors and a status 200", (done) => {
+    it("should return 20 actors and a status 200", () => {
       request(api)
-        .get("/api/actors")
+        .get("/api/actors?page=1&limit=20")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .end((err, res) => {
+        .then((err, res) => {
           expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(10);
-          done();
+          expect(res.body.results.length).to.equal(20);
         });
     });
   });
@@ -59,7 +58,7 @@ describe("Actors endpoint", () => {
   describe("GET /api/actors/:id", () => {
     describe("when the id is valid", () => {
       it("should return the matching actor", () => {
-        return request(api)
+        request(api)
           .get(`/api/actors/${actors[0].id}`)
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
@@ -72,7 +71,7 @@ describe("Actors endpoint", () => {
     });
     describe("when the id is invalid", () => {
       it("should return the NOT found message", () => {
-        return request(api)
+        request(api)
           .get("/api/actors/9999")
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")

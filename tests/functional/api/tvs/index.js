@@ -30,8 +30,8 @@ describe("Tvs endpoint", () => {
   beforeEach(async () => {
     try {
       tvs= await getTvs();
-      // await Tv.deleteMany();
-      // await Tv.collection.insertMany(tvs);
+      await Tv.deleteMany();
+      await Tv.collection.insertMany(tvs);
       
     } catch (err) {
       console.error(`failed to Load tv Data: ${err}`);
@@ -41,17 +41,16 @@ describe("Tvs endpoint", () => {
     api.close(); // To Release PORT 8080
   });
   describe("GET /api/tvs ", () => {
-    it("should return 20 tvs and a status 200", (done) => {
+    it("should return 20 tvs and a status 200", () => {
       request(api)
-        .get("/api/tvs")
+        .get("/api/tvs?page=1&limit=20")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .end((err, res) => {
+        .then((err, res) => {
           expect(res.body.results).to.be.a("array");
           expect(res.body.results.length).to.equal(10);
-          done();
         });
     });
   });
@@ -59,7 +58,7 @@ describe("Tvs endpoint", () => {
   describe("GET /api/tvs/:id", () => {
     describe("when the id is valid", () => {
       it("should return the matching tv", () => {
-        return request(api)
+        request(api)
           .get(`/api/tvs/${tvs[0].id}`)
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
@@ -72,7 +71,7 @@ describe("Tvs endpoint", () => {
     });
     describe("when the id is invalid", () => {
       it("should return the NOT found message", () => {
-        return request(api)
+        request(api)
           .get("/api/tvs/9999")
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")

@@ -2,6 +2,7 @@ import express from 'express';
 import { movies, movieReviews, movieDetails } from './moviesData';
 import uniqid from 'uniqid'
 import reviewsModel from '../reviews/reviewsModel';
+import recommendationsModel from '../recommendations/recommendationsModel';
 import movieModel from './movieModel';
 import asyncHandler from 'express-async-handler';
 import { getUpcomingMovies } from '../tmdb-api';
@@ -9,6 +10,7 @@ import { getNowplayingMovies } from '../tmdb-api';
 import { getTopRatedMovies } from '../tmdb-api';
 import { getMovieReviews } from '../tmdb-api';
 import { getPopularMovies } from '../tmdb-api';
+import { getMovieRecommendations } from '../tmdb-api';
 
 const router = express.Router(); 
 router.get('/', asyncHandler(async (req, res) => {
@@ -158,5 +160,55 @@ router.get('/tmdb/popular', asyncHandler( async(req, res) => {
     const popularMovies = await getPopularMovies();
     res.status(200).json(popularMovies);
 }));
+
+router.get('/:id/recommendations', async (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const movie = await movieModel.findByMovieDBId(id)
+    if (movie) {
+        const recommendations = movie.recommendations
+        if (recommendations.length) {
+            console.log('load from the database');
+            movieModel.findByMovieDBId(id).populate('recommendations')
+                .exec((err, foundObject) => {
+                    if (err) {
+                        next(err)
+                    }
+                    res.status(200).send(foundObject.recommendations)
+                })
+        }
+        else {
+            console.log('load from TMDB and store');
+            const recommendations = await getMovieRecommendations(id);
+            await recommendationsModel.deleteMany();
+            await recommendationsModel.collection.insertMany(recommendations);
+            const recommendation_ids = await recommendationsModel.find({}, { _id: 1 })
+            recommendation_ids.forEach(async recommendation_id => {
+                await movie.recommendations.push(recommendation_id)
+            })
+            await movie.save()
+            res.status(200).json(recommendations);
+        }
+    }
+    else {
+        res.status(404).json({
+            message: 'The resource you requested could not be found.',
+            status_code: 404
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default router;

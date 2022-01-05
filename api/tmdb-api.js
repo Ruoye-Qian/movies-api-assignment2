@@ -101,3 +101,10 @@ export const getMovieReviews = (id) => {
     .then(json => json.results);
 };
 
+export const getMovieRecommendations = (id) => {
+  return fetch(
+    `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${process.env.TMDB_KEY}&language=en-US`
+  )
+    .then(res => res.json())
+    .then(json => json.results);
+};

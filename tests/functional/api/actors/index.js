@@ -1,16 +1,16 @@
 import chai from "chai";
 import request from "supertest";
 const mongoose = require("mongoose");
-import Tv from "../../../../api/tv/tvModel";
+import People from "../../../../api/people/peopleModel";
 import api from "../../../../index";
-import { getTvs } from "../../../../api/tmdb-api";
+import { getPeoples } from "../../../../api/tmdb-api";
 
 const expect = chai.expect;
 let db;
 let token ="eyJhbGciOiJIUzI1NiJ9.dXNlcjE.FmYria8wq0aFDHnzYWhKQrhF5BkJbFNN1PqNyNQ7V4M";
-let tvs;
+let actors;
 
-describe("Tvs endpoint", () => {
+describe("Actors endpoint", () => {
   before(() => {
     mongoose.connect(process.env.MONGO_DB, {
       useNewUrlParser: true,
@@ -29,21 +29,21 @@ describe("Tvs endpoint", () => {
 
   beforeEach(async () => {
     try {
-      tvs= await getTvs();
-      await Tv.deleteMany();
-      await Tv.collection.insertMany(tvs);
+      actors= await getPeoples();
+      await People.deleteMany();
+      await People.collection.insertMany(actors);
       
     } catch (err) {
-      console.error(`failed to Load tv Data: ${err}`);
+      console.error(`failed to Load actor Data: ${err}`);
     }
   });
   afterEach(() => {
     api.close(); // To Release PORT 8080
   });
-  describe("GET /api/tvs ", () => {
-    it("should return 20 tvs and a status 200", () => {
+  describe("GET /api/actors ", () => {
+    it("should return 20 actors and a status 200", () => {
       request(api)
-        .get("/api/tvs")
+        .get("/api/actors")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
@@ -55,24 +55,24 @@ describe("Tvs endpoint", () => {
     });
   });
 
-  describe("GET /api/tvs/:id", () => {
+  describe("GET /api/actors/:id", () => {
     describe("when the id is valid", () => {
-      it("should return the matching tv", () => {
+      it("should return the matching actor", () => {
         request(api)
-          .get(`/api/tvs/${tvs[0].id}`)
+          .get(`/api/actors/${actors[0].id}`)
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(200)
           .then((res) => {
-            expect(res.body).to.have.property("name", tvs[0].name);
+            expect(res.body).to.have.property("name", actors[0].name);
           });
       });
     });
     describe("when the id is invalid", () => {
       it("should return the NOT found message", () => {
         request(api)
-          .get("/api/tvs/9999")
+          .get("/api/actors/9999")
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)

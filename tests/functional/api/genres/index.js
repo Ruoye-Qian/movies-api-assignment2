@@ -39,17 +39,17 @@ describe("Genres endpoint", () => {
     api.close(); // To Release PORT 8080
   });
   describe("GET /api/genres ", () => {
-    it("should return 19 genres and a status 200", () => {
+    it("should return 19 genres and a status 200", (done) => {
        request(api)
         .get("/api/genres")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
-          expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(19);
-          
+        .end((err, res) => {
+          expect(res.body).to.be.a("array");
+          expect(res.body.length).to.equal(19);
+          done();
         });
     });
   });

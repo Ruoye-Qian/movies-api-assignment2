@@ -85,4 +85,74 @@ describe("Movies endpoint", () => {
       });
     });
   });
+
+  describe("GET /api/movies/tmdb/upcoming ", () => {
+    it("should return 20 upcoming movies and a status 200", () => {
+      request(api)
+        .get("/api/movies/tmdb/upcoming")
+        .set('Authorization', 'Bearer ' + token)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then((err, res) => {
+          expect(res.body.results).to.be.a("array");
+          expect(res.body.results.length).to.equal(20);
+        });
+    });
+  });
+
+  describe("GET /api/movies/tmdb/nowplaying ", () => {
+    it("should return 20 nowplaying movies and a status 200", () => {
+      request(api)
+        .get("/api/movies/tmdb/nowplaying")
+        .set('Authorization', 'Bearer ' + token)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then((err, res) => {
+          expect(res.body.results).to.be.a("array");
+          expect(res.body.results.length).to.equal(20);
+        });
+    });
+  });
+
+  describe("GET /api/movies/tmdb/topRated ", () => {
+    it("should return 20 topRated movies and a status 200", () => {
+      request(api)
+        .get("/api/movies/tmdb/topRated")
+        .set('Authorization', 'Bearer ' + token)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then((err, res) => {
+          expect(res.body.results).to.be.a("array");
+          expect(res.body.results.length).to.equal(20);
+        });
+    });
+  });
+
+  describe("GET /api/movies/tmdb/popular ", () => {
+    it("should return 20 popular movies and a status 200", () => {
+      request(api)
+        .get("/api/movies/tmdb/popular")
+        .set('Authorization', 'Bearer ' + token)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then((err, res) => {
+          expect(res.body.results).to.be.a("array");
+          expect(res.body.results.length).to.equal(20);
+        });
+    });
+  });
+
+
+
+
+
+
+
+
+
 });
+

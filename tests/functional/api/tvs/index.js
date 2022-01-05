@@ -41,16 +41,17 @@ describe("Tvs endpoint", () => {
     api.close(); // To Release PORT 8080
   });
   describe("GET /api/tvs ", () => {
-    it("should return 20 tvs and a status 200", () => {
+    it("should return 20 tvs and a status 200", (done) => {
       request(api)
         .get("/api/tvs")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .end((err, res) => {
           expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(20);
+          expect(res.body.results.length).to.equal(10);
+          done();
         });
     });
   });
@@ -58,7 +59,7 @@ describe("Tvs endpoint", () => {
   describe("GET /api/tvs/:id", () => {
     describe("when the id is valid", () => {
       it("should return the matching tv", () => {
-        request(api)
+        return request(api)
           .get(`/api/tvs/${tvs[0].id}`)
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
@@ -71,7 +72,7 @@ describe("Tvs endpoint", () => {
     });
     describe("when the id is invalid", () => {
       it("should return the NOT found message", () => {
-        request(api)
+        return request(api)
           .get("/api/tvs/9999")
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")

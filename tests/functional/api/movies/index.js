@@ -148,7 +148,7 @@ describe("Movies endpoint", () => {
 
   describe("GET /api/movies/:id/reviews", () => {
     describe("when the id is valid", () => {
-      it("should return the matching movie", () => {
+      it("should return the matching reviews", () => {
         request(api)
           .get(`/api/movies/${movies[0].id}/reviews`)
           .set('Authorization', 'Bearer ' + token)
@@ -212,6 +212,45 @@ describe("Movies endpoint", () => {
       });
     });
   });
+
+  describe("GET /api/movies/:id/recommendations", () => {
+    describe("when the id is valid", () => {
+      it("should return the matching recommendations", () => {
+        request(api)
+          .get(`/api/movies/${movies[0].id}/recommendations}`)
+          .set('Authorization', 'Bearer ' + token)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then((res) => {
+            expect(res.body).to.have.property("title", movies[0].title);
+          });
+      });
+    });
+    describe("when the id is invalid", () => {
+      it("should return the NOT found message", () => {
+        request(api)
+          .get("/api/movies/9999/recommendations")
+          .set('Authorization', 'Bearer ' + token)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(404)
+          .expect({
+            status_code: 404,
+            message: "The resource you requested could not be found.",
+          });
+      });
+    });
+  });
+
+
+
+
+
+
+
+
+
 
 });
 

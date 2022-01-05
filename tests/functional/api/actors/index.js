@@ -30,8 +30,8 @@ describe("Actors endpoint", () => {
   beforeEach(async () => {
     try {
       actors= await getPeoples();
-      await People.deleteMany();
-      await People.collection.insertMany(actors);
+      // await People.deleteMany();
+      // await People.collection.insertMany(actors);
       
     } catch (err) {
       console.error(`failed to Load actor Data: ${err}`);

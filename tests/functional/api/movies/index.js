@@ -31,8 +31,8 @@ describe("Movies endpoint", () => {
   beforeEach(async () => {
     try {
       movies= await getMovies();
-      // await Movie.deleteMany();
-      // await Movie.collection.insertMany(movies);
+      await Movie.deleteMany();
+      await Movie.collection.insertMany(movies);
       
     } catch (err) {
       console.error(`failed to Load movie Data: ${err}`);
@@ -60,7 +60,7 @@ describe("Movies endpoint", () => {
   describe("GET /api/movies/:id", () => {
     describe("when the id is valid", () => {
       it("should return the matching movie", () => {
-        request(api)
+        return request(api)
           .get(`/api/movies/${movies[0].id}`)
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
@@ -68,13 +68,12 @@ describe("Movies endpoint", () => {
           .expect(200)
           .then((res) => {
             expect(res.body).to.have.property("title", movies[0].title);
-            done();
           });
       });
     });
     describe("when the id is invalid", () => {
       it("should return the NOT found message", () => {
-        request(api)
+        return request(api)
           .get("/api/movies/9999")
           .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
@@ -89,7 +88,7 @@ describe("Movies endpoint", () => {
   });
 
   describe("GET /api/movies/tmdb/upcoming ", (done) => {
-    it("should return 20 upcoming movies and a status 200", () => {
+    it("should return 20 upcoming movies and a status 200", (done) => {
       request(api)
         .get("/api/movies/tmdb/upcoming")
         .set('Authorization', 'Bearer ' + token)
@@ -105,46 +104,49 @@ describe("Movies endpoint", () => {
   });
 
   describe("GET /api/movies/tmdb/nowplaying ", () => {
-    it("should return 20 nowplaying movies and a status 200", () => {
+    it("should return 20 nowplaying movies and a status 200", (done) => {
       request(api)
         .get("/api/movies/tmdb/nowplaying")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .end((err, res) => {
           expect(res.body.results).to.be.a("array");
           expect(res.body.results.length).to.equal(20);
+          done();
         });
     });
   });
 
   describe("GET /api/movies/tmdb/topRated ", () => {
-    it("should return 20 topRated movies and a status 200", () => {
+    it("should return 20 topRated movies and a status 200", (done) => {
       request(api)
         .get("/api/movies/tmdb/topRated")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .end((err, res) => {
           expect(res.body.results).to.be.a("array");
           expect(res.body.results.length).to.equal(20);
+          done();
         });
     });
   });
 
   describe("GET /api/movies/tmdb/popular ", () => {
-    it("should return 20 popular movies and a status 200", () => {
+    it("should return 20 popular movies and a status 200", (done) => {
       request(api)
         .get("/api/movies/tmdb/popular")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .end((err, res) => {
           expect(res.body.results).to.be.a("array");
           expect(res.body.results.length).to.equal(20);
+          done();
         });
     });
   });
@@ -153,7 +155,7 @@ describe("Movies endpoint", () => {
   // describe("GET /api/movies/:id/reviews", () => {
   //   describe("when the id is valid", () => {
   //     it("should return the matching movie", () => {
-  //       request(api)
+  //       return request(api)
   //         .get(`/api/movies/${movies[0].id}/reviews`)
   //         .set('Authorization', 'Bearer ' + token)
   //         .set("Accept", "application/json")
@@ -166,7 +168,7 @@ describe("Movies endpoint", () => {
   //   });
   //   describe("when the id is invalid", () => {
   //     it("should return the NOT found message", () => {
-  //       request(api)
+  //       return request(api)
   //         .get("/api/movies/9999/reviews")
   //         .set('Authorization', 'Bearer ' + token)
   //         .set("Accept", "application/json")
@@ -178,7 +180,7 @@ describe("Movies endpoint", () => {
   //         });
   //     });
   //   });
-  //});
+  // });
 //post reviews
   // describe("POST /api/movies/:id/reviews", () => {
   //   describe("when the id is valid", () => {

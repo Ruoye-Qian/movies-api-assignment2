@@ -40,7 +40,7 @@ describe("Genres endpoint", () => {
   });
   describe("GET /api/genres ", () => {
     it("should return 19 genres and a status 200", () => {
-      request(api)
+       request(api)
         .get("/api/genres")
         .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
@@ -48,7 +48,8 @@ describe("Genres endpoint", () => {
         .expect(200)
         .then((err, res) => {
           expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(20);
+          expect(res.body.results.length).to.equal(19);
+          
         });
     });
   });

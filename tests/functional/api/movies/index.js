@@ -3,11 +3,13 @@ import request from "supertest";
 const mongoose = require("mongoose");
 import Movie from "../../../../api/movies/movieModel";
 import api from "../../../../index";
-import movies from "../../../../seedData/movies";
+//import movies from "../../../../seedData/movies";
+import { getMovies } from "../../../../api/tmdb-api";
 
 const expect = chai.expect;
 let db;
 let token ="eyJhbGciOiJIUzI1NiJ9.dXNlcjE.FmYria8wq0aFDHnzYWhKQrhF5BkJbFNN1PqNyNQ7V4M";
+let movies;
 
 describe("Movies endpoint", () => {
   before(() => {
@@ -28,8 +30,10 @@ describe("Movies endpoint", () => {
 
   beforeEach(async () => {
     try {
+      movies= await getMovies();
       await Movie.deleteMany();
       await Movie.collection.insertMany(movies);
+      
     } catch (err) {
       console.error(`failed to Load user Data: ${err}`);
     }

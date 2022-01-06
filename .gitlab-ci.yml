@@ -45,7 +45,7 @@ test_api:
 deploy_staging:
   image: ruby:latest
   only:
-    - develop
+    - developFinal
   stage: staging
   before_script:
     - apt-get update -qy

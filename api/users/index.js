@@ -59,8 +59,12 @@ router.put('/:id', async (req, res) => {
 //get favourite
 router.get('/:userName/favourites', asyncHandler( async (req, res) => {
   const userName = req.params.userName;
+  if(userName){
   const user = await User.findByUserName(userName).populate('favourites');
   res.status(200).json(user.favourites);
+  }else {
+    res.status(404).json({ code: 404, msg: 'cannot find this user' });
+  }
 }));
 
 //Add a favourite
@@ -86,8 +90,12 @@ router.post('/:userName/favourites', asyncHandler(async (req, res) => {
 //get favourite actor
 router.get('/:userName/likes', asyncHandler( async (req, res) => {
   const userName = req.params.userName;
+  if(userName){
   const user = await User.findByUserName(userName).populate('likes');
-  res.status(200).json(user.likes);
+  res.status(200).json(user.likes);    
+  }else {
+    res.status(404).json({ code: 404, msg: 'cannot find this user' });
+  }
 }));
 
 //add a favourite actor
@@ -112,8 +120,12 @@ router.post('/:userName/likes', asyncHandler(async (req, res) => {
 //get tv playlist
 router.get('/:userName/tvPlaylist', asyncHandler( async (req, res) => {
   const userName = req.params.userName;
+  if(userName){
   const user = await User.findByUserName(userName).populate('tvPlaylist');
   res.status(200).json(user.tvPlaylist);
+  }else{
+    res.status(404).json({ code: 404, msg: 'cannot find this user' });
+  }
 }));
 
 //add tv to playlist

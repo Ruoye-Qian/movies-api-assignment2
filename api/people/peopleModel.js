@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const PeopleSchema = new Schema({
     adult: { type: Boolean },
     name: { type: String },
-    id: { type: Number, required: true, unique: true },
+    id: { type: Number, required: true, unique: false },
     profile_path: { type: String },
     poster_path: { type: String },
     overview: { type: String },

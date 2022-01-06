@@ -44,13 +44,14 @@ describe("Actors endpoint", () => {
     it("should return 20 actors and a status 200", () => {
       request(api)
         .get("/api/actors?page=1&limit=20")
-        .set('Authorization', 'Bearer ' + token)
+        //.set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .then((res) => {
           expect(res.body.results).to.be.a("array");
           expect(res.body.results.length).to.equal(20);
+        
         });
     });
   });
@@ -60,7 +61,7 @@ describe("Actors endpoint", () => {
       it("should return the matching actor", () => {
         request(api)
           .get(`/api/actors/${actors[0].id}`)
-          .set('Authorization', 'Bearer ' + token)
+          //.set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(200)
@@ -73,7 +74,7 @@ describe("Actors endpoint", () => {
       it("should return the NOT found message", () => {
         request(api)
           .get("/api/actors/9999")
-          .set('Authorization', 'Bearer ' + token)
+          //.set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(404)

@@ -29,11 +29,11 @@ app.use(express.json());
 
 app.use(passport.initialize());
 
-app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+app.use('/api/movies', moviesRouter);
 app.use('/api/genres', genresRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/actors', passport.authenticate('jwt', {session: false}), actorsRouter);
-app.use('/api/tvs', passport.authenticate('jwt', {session: false}), tvsRouter);
+app.use('/api/actors',passport.authenticate('jwt', {session: false}),actorsRouter);
+app.use('/api/tvs',  tvsRouter);
 
 app.use(errHandler);
 let server = app.listen(port, () => {

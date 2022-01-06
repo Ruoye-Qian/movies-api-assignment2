@@ -7,7 +7,7 @@ import api from "../../../../index";
 const expect = chai.expect;
 let db;
 let user1token;
-let token ="eyJhbGciOiJIUzI1NiJ9.dXNlcjE.FmYria8wq0aFDHnzYWhKQrhF5BkJbFNN1PqNyNQ7V4M";
+// let token ="eyJhbGciOiJIUzI1NiJ9.dXNlcjE.FmYria8wq0aFDHnzYWhKQrhF5BkJbFNN1PqNyNQ7V4M";
 
 describe("Users endpoint", () => {
   before(() => {
@@ -112,7 +112,7 @@ describe("Users endpoint", () => {
     before(() => {
       request(api)
         .get("/api/users")
-        .set('Authorization', 'Bearer ' + token)
+        // .set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
@@ -156,8 +156,8 @@ describe("Users endpoint", () => {
     describe("when the userName is valid", () => {
       it("should return the matching favourites", () => {
         request(api)
-          .get("/api/users/user1/favourites")
-          .set('Authorization', 'Bearer ' + token)
+          .get(`/api/users/user1/favourites`)
+          // .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(200)
@@ -166,8 +166,8 @@ describe("Users endpoint", () => {
     describe("when the userName is invalid", () => {
       it("should return the NOT found message", () => {
         request(api)
-          .get("/api/users/aaaa/favourites")
-          .set('Authorization', 'Bearer ' + token)
+          .get(`/api/users/aaaa/favourites`)
+          // .set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(404)
@@ -219,40 +219,12 @@ describe("Users endpoint", () => {
     });
   });
 
-  describe("Get /api/users/:userName/favourites", () => {
-    describe("when the userName is valid", () => {
-      it("should return the matching favourites", () => {
-        request(api)
-          .get("/api/users/user1/favourites")
-          .set('Authorization', 'Bearer ' + token)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-      });
-    });
-    describe("when the userName is invalid", () => {
-      it("should return the NOT found message", () => {
-        request(api)
-          .get("/api/users/aaaa/favourites")
-          .set('Authorization', 'Bearer ' + token)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(404)
-          .expect({
-            status_code: 404,
-            message: "cannot find this user",
-          });
-      });
-    });
-  });
-
-
   describe("Get /api/users/:userName/likes", () => {
     describe("when the userName is valid", () => {
       it("should return the matching favourite actors", () => {
         request(api)
           .get("/api/users/user1/likes")
-          .set('Authorization', 'Bearer ' + token)
+          //.set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(200)
@@ -261,8 +233,8 @@ describe("Users endpoint", () => {
     describe("when the userName is invalid", () => {
       it("should return the NOT found message", () => {
         request(api)
-          .get("/api/users/aaaa/favourites")
-          .set('Authorization', 'Bearer ' + token)
+          .get("/api/users/aaaa/likes")
+          //.set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(404)
@@ -320,7 +292,7 @@ describe("Users endpoint", () => {
       it("should return the matching tv playlist", () => {
         request(api)
           .get("/api/users/user1/tvPlaylist")
-          .set('Authorization', 'Bearer ' + token)
+          //.set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(200)
@@ -330,7 +302,7 @@ describe("Users endpoint", () => {
       it("should return the NOT found message", () => {
         request(api)
           .get("/api/users/aaaa/favourites")
-          .set('Authorization', 'Bearer ' + token)
+          //.set('Authorization', 'Bearer ' + token)
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(404)

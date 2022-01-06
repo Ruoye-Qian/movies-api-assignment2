@@ -7,7 +7,7 @@ import { getGenres } from "../../../../api/tmdb-api";
 
 const expect = chai.expect;
 let db;
-let token ="eyJhbGciOiJIUzI1NiJ9.dXNlcjE.FmYria8wq0aFDHnzYWhKQrhF5BkJbFNN1PqNyNQ7V4M";
+//let token ="eyJhbGciOiJIUzI1NiJ9.dXNlcjE.FmYria8wq0aFDHnzYWhKQrhF5BkJbFNN1PqNyNQ7V4M";
 let genres;
 
 describe("Genres endpoint", () => {
@@ -31,8 +31,8 @@ describe("Genres endpoint", () => {
   beforeEach(async () => {
     try {
       genres= await getGenres();
-    //   await Genre.deleteMany();
-    //   await Genre.collection.insertMany(genres);
+      await Genre.deleteMany();
+      await Genre.collection.insertMany(genres);
       
     } catch (err) {
       console.error(`failed to Load genres Data: ${err}`);
@@ -42,16 +42,18 @@ describe("Genres endpoint", () => {
     api.close(); // To Release PORT 8080
   });
   describe("GET /api/genres ", () => {
-    it("should return 19 genres and a status 200", () => {
+    it("should return 19 genres and a status 200", (done) => {
        request(api)
         .get("/api/genres")
-        .set('Authorization', 'Bearer ' + token)
+        //.set('Authorization', 'Bearer ' + token)
         .set("Accept", "application/json")
         .expect("Content-Type", /json/)
         .expect(200)
-        .then((err, res) => {
+        .end((err, res) => {
+          if(err){throw err;}
           expect(res.body).to.be.a("array");
           expect(res.body.length).to.equal(19);
+          done();
         });
     });
   });

@@ -98,11 +98,6 @@ describe("Tvs endpoint", () => {
           .set("Accept", "application/json")
           .expect("Content-Type", /json/)
           .expect(200)
-          // .end((err,res) => {
-          //   if(err){throw err;}
-          //   expect(res.body.length).to.equal(cast.length);
-          //   done();
-          //});
       });
     });
     describe("when the id is invalid", () => {

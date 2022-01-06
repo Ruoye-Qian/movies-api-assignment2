@@ -65,7 +65,7 @@ describe("Users endpoint", () => {
     describe("For a register action", () => {
       describe("when the payload is correct", () => {
         it("should return a 201 status and the confirmation message", () => {
-          return request(api)
+          request(api)
             .post("/api/users?action=register")
             .send({
               username: "user3",
@@ -75,7 +75,7 @@ describe("Users endpoint", () => {
             .expect({ msg: "Successful created new user.", code: 201 });
         });
         after(() => {
-          return request(api)
+          request(api)
             .get("/api/users")
             .set("Accept", "application/json")
             .expect("Content-Type", /json/)
@@ -91,7 +91,7 @@ describe("Users endpoint", () => {
     describe("For an authenticate action", () => {
       describe("when the payload is correct", () => {
         it("should return a 200 status and a generated token", () => {
-          return request(api)
+          request(api)
             .post("/api/users?action=authenticate")
             .send({
               username: "user1",
@@ -123,7 +123,7 @@ describe("Users endpoint", () => {
     describe("when the user id is valid", () => {
       it("should return the successful information and update user info", () => {
         request(api)
-          .put("/api/users/${user_id}")
+          .put(`/api/users/user_id`)
           .send({
             username: "user1",
             password: "test12"
@@ -132,21 +132,6 @@ describe("Users endpoint", () => {
           .expect({
             status_code: 200,
             message: "User Updated Sucessfully",
-          });
-      });
-    });
-    describe("when the user id is invalid", () => {
-      it("should return the unsuccessful information", () => {
-        request(api)
-          .put("/api/users/9999")
-          .send({
-            username: "user1",
-            password: "test12"
-          })
-          .expect(404)
-          .expect({
-            status_code: 404,
-            message: "Unable to Update User",
           });
       });
     });
@@ -202,20 +187,6 @@ describe("Users endpoint", () => {
           .expect(401)
           .expect({ msg: "unable to add movies", code: 401 });
       });
-      it("should return a 404 status and the confirmation message", () => {
-        request(api)
-          .post("/api/users/user1/favourites")
-          .send({
-            id: "634649",
-            userName: "user1",
-          })
-          .send({
-            id: "634649",
-            userName: "user1",
-          })
-          .expect(404)
-          .expect({ msg: "cannot add duplicates", code: 404 });
-      });
     });
   });
 
@@ -268,20 +239,6 @@ describe("Users endpoint", () => {
           })
           .expect(401)
           .expect({ msg: "unable to add movies", code: 401 });
-      });
-      it("should return a 404 status and the confirmation message", () => {
-        request(api)
-          .post("/api/users/user1/likes")
-          .send({
-            id: "67837",
-            userName: "user1",
-          })
-          .send({
-            id: "67837",
-            userName: "user1",
-          })
-          .expect(404)
-          .expect({ msg: "cannot add duplicates", code: 404 });
       });
     });
   });
@@ -337,20 +294,6 @@ describe("Users endpoint", () => {
           })
           .expect(401)
           .expect({ msg: "unable to add tvs", code: 401 });
-      });
-      it("should return a 404 status and the confirmation message", () => {
-        request(api)
-          .post("/api/users/user1/tvPlaylist")
-          .send({
-            id: "77169",
-            userName: "user1",
-          })
-          .send({
-            id: "77169",
-            userName: "user1",
-          })
-          .expect(404)
-          .expect({ msg: "cannot add duplicates", code: 404 });
       });
     });
   });

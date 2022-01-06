@@ -243,5 +243,35 @@ describe("Movies endpoint", () => {
     });
   });
 
+  // describe("GET /api/movies/:id/similar", () => {
+  //   describe("when the id is valid", () => {
+  //     it("should return the matching similar movies", () => {
+  //       request(api)
+  //         .get(`/api/movies/${movies[0].id}/similar}`)
+  //         .set('Authorization', 'Bearer ' + token)
+  //         .set("Accept", "application/json")
+  //         .expect("Content-Type", /json/)
+  //         .expect(200)
+  //         .then((res) => {
+  //           expect(res.body).to.have.property("title", movies[0].title);
+  //         });
+  //     });
+  //   });
+  //   describe("when the id is invalid", () => {
+  //     it("should return the NOT found message", () => {
+  //       request(api)
+  //         .get("/api/movies/9999/similar")
+  //         .set('Authorization', 'Bearer ' + token)
+  //         .set("Accept", "application/json")
+  //         .expect("Content-Type", /json/)
+  //         .expect(404)
+  //         .expect({
+  //           status_code: 404,
+  //           message: "The resource you requested could not be found.",
+  //         });
+  //     });
+  //   });
+  // });
+
 });
 

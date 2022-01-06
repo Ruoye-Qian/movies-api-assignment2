@@ -36,7 +36,11 @@ const MovieSchema = new Schema({
   recommendations: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Recommendations'
-  }, {collection: 'recommendations'}]
+  }, {collection: 'recommendations'}],
+  similar: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Similar'
+  }, {collection: 'similar'}]
 });
 
 MovieSchema.statics.findByMovieDBId = function (id) {

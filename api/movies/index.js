@@ -3,6 +3,7 @@ import { movies, movieReviews, movieDetails } from './moviesData';
 import uniqid from 'uniqid'
 import reviewsModel from '../reviews/reviewsModel';
 import recommendationsModel from '../recommendations/recommendationsModel';
+import similarModel from '../similar/similarModel';
 import movieModel from './movieModel';
 import asyncHandler from 'express-async-handler';
 import { getUpcomingMovies } from '../tmdb-api';
@@ -11,6 +12,7 @@ import { getTopRatedMovies } from '../tmdb-api';
 import { getMovieReviews } from '../tmdb-api';
 import { getPopularMovies } from '../tmdb-api';
 import { getMovieRecommendations } from '../tmdb-api';
+import { getSimilarMoive } from '../tmdb-api';
 
 const router = express.Router(); 
 router.get('/', asyncHandler(async (req, res) => {
@@ -197,7 +199,41 @@ router.get('/:id/recommendations', async (req, res, next) => {
     }
 });
 
-
+router.get('/:id/similar', async (req, res, next) => {
+    const id = parseInt(req.params.id);
+    const movie = await movieModel.findByMovieDBId(id)
+    if (movie) {
+        const similar = movie.similar
+        if (similar.length) {
+            console.log('load from the database');
+            movieModel.findByMovieDBId(id).populate('similar')
+                .exec((err, foundObject) => {
+                    if (err) {
+                        next(err)
+                    }
+                    res.status(200).send(foundObject.similar)
+                })
+        }
+        else {
+            console.log('load from TMDB and store');
+            const similar = await getSimilarMoive(id);
+            await similarModel.deleteMany();
+            await similarModel.collection.insertMany(similar);
+            const similar_ids = await similarModel.find({}, { _id: 1 })
+            similar_ids.forEach(async similar_id => {
+                await movie.similar.push(similar_id)
+            })
+            await movie.save()
+            res.status(200).json(similar);
+        }
+    }
+    else {
+        res.status(404).json({
+            message: 'The resource you requested could not be found.',
+            status_code: 404
+        });
+    }
+});
 
 
 

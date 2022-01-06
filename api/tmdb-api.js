@@ -111,3 +111,11 @@ export const getSimilarMoive = (id) => {
     .then(res => res.json())
     .then(json => json.results);
 };
+
+export const getTvCast = (id) => {
+  return fetch(
+    `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${process.env.TMDB_KEY}&language=en-US`
+  )
+    .then(res => res.json())
+    .then(json => json.cast);
+};

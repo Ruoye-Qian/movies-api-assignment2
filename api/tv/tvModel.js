@@ -16,7 +16,11 @@ const TvSchema = new Schema({
   vote_average: { type: Number },
   first_air_date: { type: String },
   name: { type: String },
-  original_name:{ type: String }
+  original_name:{ type: String },
+  cast: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cast'
+  }, {collection: 'cast'}]
 });
 
 TvSchema.statics.findByTvDBId = function (id) {

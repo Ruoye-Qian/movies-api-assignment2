@@ -84,4 +84,37 @@ describe("Tvs endpoint", () => {
       });
     });
   });
+
+  // describe("GET /api/tvs/:id/cast", () => {
+  //   describe("when the id is valid", () => {
+  //     it("should return the matching cast", () => {
+  //       request(api)
+  //         .get(`/api/tvs/${tvs[0].id}/cast}`)
+  //         .set('Authorization', 'Bearer ' + token)
+  //         .set("Accept", "application/json")
+  //         .expect("Content-Type", /json/)
+  //         .expect(200)
+  //     });
+  //   });
+  //   describe("when the id is invalid", () => {
+  //     it("should return the NOT found message", () => {
+  //       request(api)
+  //         .get("/api/tvs/9999/cast")
+  //         .set('Authorization', 'Bearer ' + token)
+  //         .set("Accept", "application/json")
+  //         .expect("Content-Type", /json/)
+  //         .expect(404)
+  //         .expect({
+  //           status_code: 404,
+  //           message: "The resource you requested could not be found.",
+  //         });
+  //     });
+  //   });
+  // });
+
+
+
+
+
 });
+

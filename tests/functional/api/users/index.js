@@ -108,6 +108,50 @@ describe("Users endpoint", () => {
     });
   });
 
+  describe("PUT /api/users/:id", () => {
+    before(() => {
+      request(api)
+        .get("/api/users")
+        .set('Authorization', 'Bearer ' + token)
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .then((res) => {
+          user_id = res.body.map(user => user._id)[0]
+        })
+    })
+    describe("when the user id is valid", () => {
+      it("should return the successful information and update user info", () => {
+        request(api)
+          .put("/api/users/${user_id}")
+          .send({
+            username: "user1",
+            password: "test12"
+          })
+          .expect(200)
+          .expect({
+            status_code: 200,
+            message: "User Updated Sucessfully",
+          });
+      });
+    });
+    describe("when the user id is invalid", () => {
+      it("should return the unsuccessful information", () => {
+        request(api)
+          .put("/api/users/9999")
+          .send({
+            username: "user1",
+            password: "test12"
+          })
+          .expect(404)
+          .expect({
+            status_code: 404,
+            message: "Unable to Update User",
+          });
+      });
+    });
+  });
+
   describe("Get /api/users/:userName/favourites", () => {
     describe("when the userName is valid", () => {
       it("should return the matching favourites", () => {
@@ -174,6 +218,34 @@ describe("Users endpoint", () => {
       });
     });
   });
+
+  describe("Get /api/users/:userName/favourites", () => {
+    describe("when the userName is valid", () => {
+      it("should return the matching favourites", () => {
+        request(api)
+          .get("/api/users/user1/favourites")
+          .set('Authorization', 'Bearer ' + token)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+      });
+    });
+    describe("when the userName is invalid", () => {
+      it("should return the NOT found message", () => {
+        request(api)
+          .get("/api/users/aaaa/favourites")
+          .set('Authorization', 'Bearer ' + token)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(404)
+          .expect({
+            status_code: 404,
+            message: "cannot find this user",
+          });
+      });
+    });
+  });
+
 
   describe("Get /api/users/:userName/likes", () => {
     describe("when the userName is valid", () => {
@@ -310,14 +382,5 @@ describe("Users endpoint", () => {
       });
     });
   });
-
-
-
-
-
-
-
-
-
 
 });

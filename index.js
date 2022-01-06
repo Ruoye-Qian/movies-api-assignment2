@@ -9,6 +9,7 @@ import actorsRouter from './api/people';
 import tvsRouter from './api/tv';
 import './db';
 import './seedData'
+import bodyParser from "body-parser";
 
 dotenv.config();
 
@@ -25,9 +26,19 @@ const app = express();
 
 const port = process.env.PORT;
 
-app.use(express.json());
+app.use(express.static("public"));
+app.use(
+  session({
+    secret: "ilikecake",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+// app.use(express.json());
 
 app.use(passport.initialize());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 app.use('/api/movies', moviesRouter);
 app.use('/api/genres', genresRouter);

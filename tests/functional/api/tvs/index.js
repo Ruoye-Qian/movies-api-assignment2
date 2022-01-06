@@ -50,7 +50,7 @@ describe("Tvs endpoint", () => {
         .expect(200)
         .then((err, res) => {
           expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(10);
+          expect(res.body.results.length).to.equal(20);
         });
     });
   });

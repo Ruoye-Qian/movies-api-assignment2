@@ -22,6 +22,7 @@ describe("Genres endpoint", () => {
   after(async () => {
     try {
       await db.dropDatabase();
+
     } catch (error) {
       console.log(error);
     }
@@ -30,6 +31,8 @@ describe("Genres endpoint", () => {
   beforeEach(async () => {
     try {
       genres= await getGenres();
+    //   await Genre.deleteMany();
+    //   await Genre.collection.insertMany(genres);
       
     } catch (err) {
       console.error(`failed to Load genres Data: ${err}`);
@@ -47,8 +50,8 @@ describe("Genres endpoint", () => {
         .expect("Content-Type", /json/)
         .expect(200)
         .then((err, res) => {
-          expect(res.body.results).to.be.a("array");
-          expect(res.body.results.length).to.equal(19);
+          expect(res.body).to.be.a("array");
+          expect(res.body.length).to.equal(19);
         });
     });
   });

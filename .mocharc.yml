@@ -6,4 +6,4 @@ file:
     - 'tests/functional/api/genres/index.js'
 require: '@babel/register'
 exit: true
-timeout: 6000
+timeout: 10000

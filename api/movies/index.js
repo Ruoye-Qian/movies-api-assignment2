@@ -55,7 +55,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 // });
 
 //get movie reviews
-router.get('/:id/reviews', async (req, res, next) => {
+router.get('/:id/reviews', asyncHandler(async (req, res, next) => {
     const id = parseInt(req.params.id);
     const movie = await movieModel.findByMovieDBId(id)
     if (movie) {
@@ -89,7 +89,7 @@ router.get('/:id/reviews', async (req, res, next) => {
             status_code: 404
         });
     }
-});
+}));
 
 // //Post a movie review
 // router.post('/:id/reviews', (req, res) => {
